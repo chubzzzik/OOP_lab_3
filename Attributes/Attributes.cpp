@@ -28,9 +28,29 @@ Quantity::Quantity(int val):value_(val){
 int Quantity::getValue() const{
     return value_;
 }
+void Quantity::setValue(int newVal){
+    if(newVal < 0){ 
+        throw std::invalid_argument("Quantity can't be negative"); 
+    }
+    value_ = newVal;
+}
 void Quantity::change(int delta){
     if(value_ + delta < 0){
         throw std::invalid_argument("Quantity can't be negative");
     }
     value_ += delta;
+}
+
+
+Weight::Weight(double val):value_(val){
+    if(val < 0){ throw std::invalid_argument("Weight can't be negative"); }
+}
+double Weight::getValue() const{
+    return value_;
+}
+void Weight::setValue(double newVal){
+    if(newVal < 0){
+        throw std::invalid_argument("Weight can't be negative");
+    }
+    value_ = newVal;
 }
