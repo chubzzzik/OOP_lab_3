@@ -15,8 +15,8 @@ Product* Product::clone(){
     return new Product(*this);
 }
 
-void Product::changePrice(const Price& newPrice){
-    price_ = newPrice;
+void Product::changePrice(int newPrice){
+    price_.setValue(newPrice);
 }
 
 void Product::changeQuantity(int delta){

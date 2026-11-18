@@ -19,7 +19,7 @@ class Product{
         const Weight& weight, const Quantity& quantity);
     ~Product() = default;
     Product* clone();
-    void changePrice(const Price& newPrice);
+    void changePrice(int newPrice);
     void changeQuantity(int delta);
     int getId() const;
     const std::string& getCategory() const;
