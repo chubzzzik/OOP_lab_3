@@ -11,7 +11,7 @@ class DeliveryProxy:public Delivery{
     
     public:
     DeliveryProxy(const std::shared_ptr<Delivery>& delivery, const std::string& reg);
-    double getCost(const Order& order) const override;
+    int getCost(const Order& order) const override;
     std::string getEstimatedTime() const override;
     bool isAvailable(const Order&) const override;
 };

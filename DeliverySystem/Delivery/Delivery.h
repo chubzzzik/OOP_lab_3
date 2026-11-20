@@ -1,13 +1,14 @@
 #pragma once
 
 #include<string>
+#include<memory>
 
 class Order;
 
-class Delivery{ 
+class Delivery:public std::enable_shared_from_this<Delivery>{ 
     public:
     virtual ~Delivery() = default;
-    virtual double getCost(const Order&) const = 0;
+    virtual int getCost(const Order&) const = 0;
     virtual std::string getEstimatedTime() const = 0;
     virtual bool isAvailable(const Order&) const = 0;
 };

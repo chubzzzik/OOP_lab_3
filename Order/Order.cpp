@@ -1,1 +1,132 @@
 #include"Order.h"
+#include"OrderEvent.h"
+
+#include<algorithm>
+#include<stdexcept>
+#include<iostream>
+#include<memory>
+
+int Order::nextId_ = 1;
+
+Order::Order(const std::string& customer, const OrderStatus& status, const std::string& reg):
+    id_(nextId_),customer_(customer),status_(status),totalDiscount_(0),isDeliveryFree_(false),region_(reg){
+    nextId_ += 1;
+}
+
+void Order::addItem(const std::shared_ptr<Product>& item){
+    if(item == nullptr){
+        throw std::invalid_argument("Order::addItem: item is null");
+    }
+    items_.push_back(item);
+}
+
+void Order::removeItem(const std::shared_ptr<Product>& item){
+    auto it = std::find(items_.begin(),items_.end(), item);
+    if(it == items_.end()){
+        throw std::invalid_argument("Order::removeItem: item not found in order");
+    }
+    else{
+        items_.erase(it);
+    }
+}
+
+double Order::getTotalWeight() const{
+    double total = 0;
+    for(auto t : items_){
+        total += t->getWeight().getValue();
+    }
+    return total;
+}
+
+int Order::getTotalPrice() const{
+    int total = 0;
+    for(auto t : items_){
+        total += t->getPrice().getValue();
+    }
+    if((delivery_ != nullptr) &&(isDeliveryFree_ == false)){
+        if((total + (delivery_->getCost(*this)) - totalDiscount_) < 0){
+            return 0;
+        }
+        return total + (delivery_->getCost(*this)) - totalDiscount_;
+    }
+    if(total - totalDiscount_ < 0){ return 0; }
+    return total - totalDiscount_;
+}
+
+void Order::setStatus(const OrderStatus& newStatus){
+    if(newStatus == status_){
+        return;
+    }
+    OrderEvent event (id_, status_, newStatus);
+    status_ = newStatus;
+    this->notify(event);
+}
+
+const std::vector<std::shared_ptr<Product>>& Order::getItems()const{
+    return items_;
+}
+
+void Order::applyDiscount(const std::shared_ptr<Discount>& discount){
+    if(discount == nullptr){
+        throw std::invalid_argument("Order::applyDiscount: discount is null");
+    }
+    discount->apply(*this);
+    discounts_.push_back(discount);
+}
+
+void Order::setDelivery(const std::shared_ptr<Delivery>& newDelivery){
+    if(newDelivery == nullptr){
+        throw std::invalid_argument("Order::setDelivery: delivery is null");
+    }
+    delivery_ = newDelivery;
+}
+
+void Order::addDiscountAmount(int amount){
+    if(amount<0){
+        throw std::invalid_argument("Order::addDiscountAmount: amount is negative");
+    }
+    else{
+        totalDiscount_ += amount;
+    }
+}
+
+void Order::setFreeDelivery(){
+    isDeliveryFree_ = true;
+}
+
+const std::string& Order::getRegion() const{
+    return region_;
+}
+
+void Order::setRegion(const std::string& newRegion){
+    region_ = newRegion;
+}
+
+int Order::getId() const{
+    return id_;
+}
+
+const std::string& Order::getCustomer() const{
+    return customer_;
+}
+
+OrderStatus Order::getStatus() const{
+    return status_;
+}
+
+Order& operator+(Order& order, const Discount& discount){
+    discount.apply(order);
+    return order;
+}
+
+Order& operator<<(Delivery& delivery, Order& order){
+    order.setDelivery(delivery.shared_from_this());
+    return order;
+}
+
+std::ostream& operator<<(std::ostream& os, const Order& order){
+    os << "Id: " << order.getId() << " клиент: " << order.getCustomer() << " статус: "
+    << statusToString(order.getStatus()) << " сумма: " << order.getTotalPrice() << " вес: "
+    << order.getTotalWeight() << " регион: " << order.getRegion() << "\n";
+    return os;
+}
