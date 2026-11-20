@@ -15,3 +15,7 @@ bool CourierDelivery::isAvailable(const Order& order) const {
     }
     return false;
 }
+
+std::string CourierDelivery::getType() const {
+    return "courier";
+}

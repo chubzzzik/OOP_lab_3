@@ -41,6 +41,7 @@ class Order:public Observable{
     int getId() const;
     const std::string& getCustomer() const;
     OrderStatus getStatus() const;
+    const std::shared_ptr<Delivery>& getDelivery() const;
 
     Order(const Order&) = delete;
     Order& operator=(const Order&) = delete;

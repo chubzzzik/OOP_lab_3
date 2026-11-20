@@ -11,3 +11,7 @@ std::string PickupDelivery::getEstimatedTime() const {
 bool PickupDelivery::isAvailable(const Order&) const {
     return true;
 }
+
+std::string PickupDelivery::getType() const {
+    return "pickup";
+}

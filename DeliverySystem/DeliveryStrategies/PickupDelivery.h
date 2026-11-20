@@ -7,4 +7,5 @@ class PickupDelivery:public Delivery{
     int getCost(const Order&) const override;
     std::string getEstimatedTime() const override;
     bool isAvailable(const Order&) const override;
+    std::string getType() const override;
 };

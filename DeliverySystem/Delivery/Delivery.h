@@ -11,4 +11,5 @@ class Delivery:public std::enable_shared_from_this<Delivery>{
     virtual int getCost(const Order&) const = 0;
     virtual std::string getEstimatedTime() const = 0;
     virtual bool isAvailable(const Order&) const = 0;
+    virtual std::string getType() const = 0;
 };

@@ -3,6 +3,7 @@
 #include"Delivery.h"
 
 #include<memory>
+#include<string>
 
 class DeliveryProxy:public Delivery{
     private:
@@ -14,4 +15,5 @@ class DeliveryProxy:public Delivery{
     int getCost(const Order& order) const override;
     std::string getEstimatedTime() const override;
     bool isAvailable(const Order&) const override;
+    std::string getType() const override;
 };

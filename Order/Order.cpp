@@ -114,6 +114,10 @@ OrderStatus Order::getStatus() const{
     return status_;
 }
 
+const std::shared_ptr<Delivery>& Order::getDelivery() const{
+    return delivery_;
+}
+
 Order& operator+(Order& order, const Discount& discount){
     discount.apply(order);
     return order;

@@ -15,3 +15,7 @@ bool PostDelivery::isAvailable(const Order& order) const {
     }
     return false;
 }
+
+std::string PostDelivery::getType() const {
+    return "post";
+}

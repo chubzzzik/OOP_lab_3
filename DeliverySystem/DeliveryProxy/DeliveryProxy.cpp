@@ -33,3 +33,7 @@ bool DeliveryProxy::isAvailable(const Order& order) const{
     bool result = realDelivery_->isAvailable(order);
     return result;
 }
+
+std::string DeliveryProxy::getType() const{
+    return realDelivery_->getType();
+}
