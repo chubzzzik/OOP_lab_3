@@ -106,3 +106,15 @@ void OrderManager::onOrderEvent(const OrderEvent& event){
         std::cout << "[OrderManager] INFO: заказ доставлен, активных заказов: "<< activeOrders_ <<  "\n";
     }
 }
+
+std::shared_ptr<Order> OrderManager::findById(int orderId) const{
+    auto it = orders_.find(orderId);
+    if(it == orders_.end()){
+        throw std::invalid_argument("This id does not exist");
+    }
+    return it->second;
+}
+
+void OrderManager::setMediator(std::weak_ptr<ShopMediator> med){
+    mediator_ = med;
+}  

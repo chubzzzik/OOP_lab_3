@@ -60,3 +60,7 @@ void Warehouse::moveProduct(int id, Warehouse& other){
     other.addProduct(it->second);
     products_.erase(it);
 }
+
+void Warehouse::setMediator(std::weak_ptr<ShopMediator> med){
+    mediator_ = med;
+}   

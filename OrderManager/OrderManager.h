@@ -2,6 +2,7 @@
 
 #include"Order.h"
 #include"Observer.h"
+#include"ShopMediator.h"
 
 #include<vector>
 #include<memory>
@@ -14,6 +15,7 @@ class OrderManager:public Observer{
     std::vector<std::string> customers_;
     int turnover_ = 0;
     int activeOrders_ = 0;
+    std::weak_ptr<ShopMediator> mediator_;
 
     public:
     int createOrder(const std::string& customer, const std::string& region);
@@ -23,7 +25,9 @@ class OrderManager:public Observer{
     void deliverOrder(int orderId);
     void getStatistics() const;
     void onOrderEvent(const OrderEvent& event) override;
- 
+    std::shared_ptr<Order> findById(int orderId) const;
+    void setMediator(std::weak_ptr<ShopMediator> med);
+
     OrderManager() = default;
     OrderManager(const OrderManager&) = delete;
     OrderManager& operator=(const OrderManager&) = delete;

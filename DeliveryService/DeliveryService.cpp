@@ -1,9 +1,12 @@
-#include"DeliverySystem.h"
+#include"DeliveryService.h"
 #include"Order.h"
+#include"Delivery.h"
 
 #include<stdexcept>
+#include<memory>
 
-DeliverySystem::DeliverySystem(int couriers, int pickupPoints, int postOffices):
+
+DeliveryService::DeliveryService(int couriers, int pickupPoints, int postOffices):
     couriers_(couriers), pickupPoints_(pickupPoints), postOffices_(postOffices){
         if(couriers < 0){
             throw std::invalid_argument("Couriers count cannot be negative");
@@ -16,7 +19,7 @@ DeliverySystem::DeliverySystem(int couriers, int pickupPoints, int postOffices):
         }
     }
 
-bool DeliverySystem::isAvailable(const Order& order){
+bool DeliveryService::isAvailable(const Order& order){
     if(order.getDelivery() == nullptr){
         throw std::logic_error("Order has no delivery yet"); 
     }
@@ -35,35 +38,40 @@ bool DeliverySystem::isAvailable(const Order& order){
     return false;
 }
 
-int DeliverySystem::calculateCost(const Order& order){
+int DeliveryService::calculateCost(const Order& order){
     if(order.getDelivery() == nullptr){
         throw std::logic_error("Order has no delivery yet"); 
     }
     return order.getDelivery()->getCost(order);
 }
 
-void DeliverySystem::scheduleDelivery(const Order& order){
-    if(order.getDelivery() == nullptr){
-        throw std::logic_error("Order has no delivery yet");
+void DeliveryService::scheduleDelivery(Order& order, const std::shared_ptr<Delivery>& delivery){
+    if(delivery == nullptr){
+        throw std::invalid_argument("This delivery does not exist");
     }
-    if(!isAvailable(order)){
-        throw std::logic_error("Delivery is not available");
+    if(!(delivery->isAvailable(order))){
+        throw std::logic_error("This delivery is not availabl for this order");
     }
 
-    const std::string type = order.getDelivery()->getType();
-
-    if(type == "courier"){
+    if(delivery->getType() == "courier" && couriers_ > 0){
+        order.setDelivery(delivery);
         couriers_--;
         return;
     }
-    if(type == "pickup"){
+    if(delivery->getType() == "pickup" && pickupPoints_ > 0){
+        order.setDelivery(delivery);
         pickupPoints_--;
         return;
     }
-    if(type == "post"){
+    if(delivery->getType() == "post" && postOffices_ > 0){
+        order.setDelivery(delivery);
         postOffices_--;
         return;
     }
 
-    throw std::logic_error("Unknown delivery type");
+    throw std::logic_error("There are no resources left for this delivery");
 }
+
+void DeliveryService::setMediator(std::weak_ptr<ShopMediator> med){
+    mediator_ = med;
+}  

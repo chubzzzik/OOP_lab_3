@@ -1,13 +1,15 @@
 #pragma once
 
 #include"Product.h"
-
+#include"ShopMediator.h"
+ 
 #include<memory>
 #include<unordered_map>
 
 class Warehouse{
     private:
     std::unordered_map<int, std::shared_ptr<Product>> products_;
+    std::weak_ptr<ShopMediator> mediator_;
 
     public:
     ~Warehouse() = default;
@@ -17,4 +19,5 @@ class Warehouse{
     void changePrice(int id, int newPrice);
     void changeQuantity(int id, int delta);
     void moveProduct(int id, Warehouse& other);
+    void setMediator(std::weak_ptr<ShopMediator> med);
 };
