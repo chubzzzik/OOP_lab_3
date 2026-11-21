@@ -114,3 +114,16 @@ std::shared_ptr<Order> OrderManager::findById(int orderId) const{
     }
     return it->second;
 }
+
+bool OrderManager::isProductReserved(int productId) const{
+    for(auto t : orders_){
+        if(t.second->getStatus() == OrderStatus::Pending || t.second->getStatus() == OrderStatus::Paid){
+            for(auto it : t.second->getItems()){
+                if(it->getId() == productId){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}

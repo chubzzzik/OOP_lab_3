@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Command.h"
+#include"Command.h"
 
-#include <memory>
+#include<memory>
 
-class ShowStatisticsCommand : public Command {
-public:
+class ShowStatisticsCommand:public Command{
+    public:
     explicit ShowStatisticsCommand(std::shared_ptr<ShopFacade> facade);
     void execute() override;
 };

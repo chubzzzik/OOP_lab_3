@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Command.h"
+#include"Command.h"
 
-#include <memory>
+#include<memory>
 
-class CancelOrderCommand : public Command {
-public:
-    explicit CancelOrderCommand(std::shared_ptr<ShopFacade> facade);
+class CancelOrderCommand:public Command{
+    private:
+    int orderId_;
+
+    public:
+    CancelOrderCommand(std::shared_ptr<ShopFacade> facade, int orderId);
     void execute() override;
 };

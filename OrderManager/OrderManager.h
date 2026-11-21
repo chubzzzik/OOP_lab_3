@@ -24,6 +24,7 @@ class OrderManager:public Observer{
     void getStatistics() const;
     void onOrderEvent(const OrderEvent& event) override;
     std::shared_ptr<Order> findById(int orderId) const;
+    bool isProductReserved(int productId) const;
 
     OrderManager() = default;
     OrderManager(const OrderManager&) = delete;

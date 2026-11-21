@@ -23,10 +23,14 @@ class ShopMediator{
     ShopMediator(std::shared_ptr<Warehouse> w, std::shared_ptr<OrderManager> o,
         std::shared_ptr<DeliveryService> d, std::shared_ptr<PaymentSystem> p);
 
-    void createOrder(const std::string& customer, const std::vector<std::shared_ptr<Product>>& items,
+    int createOrder(const std::string& customer, const std::vector<std::shared_ptr<Product>>& items,
         const std::shared_ptr<Delivery>& deliveryType, const std::string& region);
     void confirmPayment(int id);
     void shipOrder(int id);
     void cancelOrder(int id);
     void getStatistics() const;
+
+    void onProductAdded(int id);
+    void onProductChanged(int id);
+    void onProductRemoved(int id);
 };
