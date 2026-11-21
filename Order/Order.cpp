@@ -9,7 +9,8 @@
 int Order::nextId_ = 1;
 
 Order::Order(const std::string& customer, const OrderStatus& status, const std::string& reg):
-    id_(nextId_),customer_(customer),status_(status),totalDiscount_(0),isDeliveryFree_(false),region_(reg){
+    id_(nextId_),customer_(customer),status_(status),totalDiscount_(0),isDeliveryFree_(false),
+    region_(reg),totalPrice_(0){
     nextId_ += 1;
 }
 
@@ -18,6 +19,7 @@ void Order::addItem(const std::shared_ptr<Product>& item){
         throw std::invalid_argument("Order::addItem: item is null");
     }
     items_.push_back(item);
+    totalPrice_ += item->getPrice().getValue();
 }
 
 void Order::removeItem(const std::shared_ptr<Product>& item){
@@ -26,6 +28,7 @@ void Order::removeItem(const std::shared_ptr<Product>& item){
         throw std::invalid_argument("Order::removeItem: item not found in order");
     }
     else{
+        totalPrice_ -= item->getPrice().getValue();
         items_.erase(it);
     }
 }
@@ -39,18 +42,14 @@ double Order::getTotalWeight() const{
 }
 
 int Order::getTotalPrice() const{
-    int total = 0;
-    for(auto t : items_){
-        total += t->getPrice().getValue();
-    }
-    if((delivery_ != nullptr) &&(isDeliveryFree_ == false)){
-        if((total + (delivery_->getCost(*this)) - totalDiscount_) < 0){
+    if((deliveryType_ != nullptr) &&(isDeliveryFree_ == false)){
+        if((totalPrice_ + (deliveryType_->getCost(*this)) - totalDiscount_) < 0){
             return 0;
         }
-        return total + (delivery_->getCost(*this)) - totalDiscount_;
+        return totalPrice_ + (deliveryType_->getCost(*this)) - totalDiscount_;
     }
-    if(total - totalDiscount_ < 0){ return 0; }
-    return total - totalDiscount_;
+    if(totalPrice_ - totalDiscount_ < 0){ return 0; }
+    return totalPrice_ - totalDiscount_;
 }
 
 void Order::setStatus(const OrderStatus& newStatus){
@@ -78,7 +77,7 @@ void Order::setDelivery(const std::shared_ptr<Delivery>& newDelivery){
     if(newDelivery == nullptr){
         throw std::invalid_argument("Order::setDelivery: delivery is null");
     }
-    delivery_ = newDelivery;
+    deliveryType_ = newDelivery;
 }
 
 void Order::addDiscountAmount(int amount){
@@ -115,7 +114,7 @@ OrderStatus Order::getStatus() const{
 }
 
 const std::shared_ptr<Delivery>& Order::getDelivery() const{
-    return delivery_;
+    return deliveryType_;
 }
 
 Order& operator+(Order& order, const Discount& discount){

@@ -114,7 +114,3 @@ std::shared_ptr<Order> OrderManager::findById(int orderId) const{
     }
     return it->second;
 }
-
-void OrderManager::setMediator(std::weak_ptr<ShopMediator> med){
-    mediator_ = med;
-}  

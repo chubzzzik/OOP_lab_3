@@ -18,11 +18,12 @@ class Order:public Observable{
     std::string customer_;
     std::vector<std::shared_ptr<Product>> items_;
     OrderStatus status_;
-    std::shared_ptr<Delivery> delivery_;
+    std::shared_ptr<Delivery> deliveryType_;
     std::vector<std::shared_ptr<Discount>> discounts_;
     int totalDiscount_;
     bool isDeliveryFree_;
     std::string region_;
+    int totalPrice_;
 
     public:
     Order(const std::string& customer, const OrderStatus& status, const std::string& reg);

@@ -32,7 +32,3 @@ void PaymentSystem::refund(const Order& order){
 int PaymentSystem::checkBalance() const{
     return balance_;
 }
-
-void PaymentSystem::setMediator(std::weak_ptr<ShopMediator> med){
-    mediator_ = med;
-}  

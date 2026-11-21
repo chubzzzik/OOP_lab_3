@@ -1,11 +1,15 @@
 #pragma once
 
 #include<memory>
+#include<string>
+#include<vector>
 
 class Warehouse;
 class OrderManager;
 class DeliveryService;
 class PaymentSystem;
+class Product;
+class Delivery;
 
 class ShopMediator{
     private:
@@ -18,9 +22,11 @@ class ShopMediator{
     ~ShopMediator() = default;
     ShopMediator(std::shared_ptr<Warehouse> w, std::shared_ptr<OrderManager> o,
         std::shared_ptr<DeliveryService> d, std::shared_ptr<PaymentSystem> p);
-    void notifyProductAdded(int id);
-    void notifyOrderCreated(int id);
-    void notifyPaymentConfirmed(int id);
-    void notifyOrderShipped(int id);
-    void notifyProductMoved(int id);
+
+    void createOrder(const std::string& customer, const std::vector<std::shared_ptr<Product>>& items,
+        const std::shared_ptr<Delivery>& deliveryType, const std::string& region);
+    void confirmPayment(int id);
+    void shipOrder(int id);
+    void cancelOrder(int id);
+    void getStatistics() const;
 };

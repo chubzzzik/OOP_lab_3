@@ -71,7 +71,3 @@ void DeliveryService::scheduleDelivery(Order& order, const std::shared_ptr<Deliv
 
     throw std::logic_error("There are no resources left for this delivery");
 }
-
-void DeliveryService::setMediator(std::weak_ptr<ShopMediator> med){
-    mediator_ = med;
-}  
