@@ -7,6 +7,16 @@
 #include<stdexcept>
 #include<iostream>
 
+int Warehouse::nextId_ = 1;
+
+Warehouse::Warehouse() : id_(nextId_){
+    nextId_++;
+}
+
+int Warehouse::getId() const{
+    return id_;
+}
+
 void Warehouse::addProduct(std::shared_ptr<Product> product){
     if(product == nullptr){
         throw std::invalid_argument("This product does not exist");

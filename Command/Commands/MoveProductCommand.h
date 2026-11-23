@@ -9,10 +9,9 @@ class Warehouse;
 class MoveProductCommand:public Command{
     private:
     int productId_;
-    std::shared_ptr<Warehouse> targetWarehouse_;
+    int targetWarehouseId_;
 
     public:
-    MoveProductCommand(std::shared_ptr<ShopFacade> facade, int productId,
-        std::shared_ptr<Warehouse> targetWarehouse);
+    MoveProductCommand(std::shared_ptr<ShopFacade> facade, int productId, int targetWarehouseId);
     void execute() override;
 };

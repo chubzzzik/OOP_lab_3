@@ -10,6 +10,7 @@
 #include<string>
 #include<vector>
 #include<stdexcept>
+#include<algorithm>
 
 ShopFacade::ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<ShopMediator> mediator,
         std::shared_ptr<CommandHistory> history, std::shared_ptr<Handler> inputHandler):
@@ -26,6 +27,8 @@ ShopFacade::ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<Sho
             if(inputHandler == nullptr){
                 throw std::invalid_argument("This Handler does not exist");
             }
+
+            warehouses_.emplace(warehouse->getId(), warehouse);
         }
 
 void ShopFacade::addProduct(const std::string& type, const std::string& name, int price, double weight,
@@ -47,11 +50,12 @@ void ShopFacade::changeQuantity(int productId, int amount){
     mediator_->onProductChanged(productId);
 }
 
-void ShopFacade::moveProduct(int productId, std::shared_ptr<Warehouse> targetWarehouse){
-    if(targetWarehouse == nullptr){
-        throw std::invalid_argument("This Warehouse does not exist");
+void ShopFacade::moveProduct(int productId, int targetWarehouseId){
+    auto it = warehouses_.find(targetWarehouseId);
+    if(it == warehouses_.end()){
+        throw std::invalid_argument("This Warehouse id does not exist");
     }
-    warehouse_->moveProduct(productId, *targetWarehouse);
+    warehouse_->moveProduct(productId, *(it->second));
 }
 
 void ShopFacade::removeProduct(int productId){
@@ -98,4 +102,19 @@ void ShopFacade::executeCommand(std::shared_ptr<Command> command){
 
 void ShopFacade::processInput(const std::string& input){
     inputHandler_->handle(input);
+}
+
+void ShopFacade::addWarehouse(std::shared_ptr<Warehouse> warehouse){
+    if(warehouse == nullptr){
+        throw std::invalid_argument("This Warehouse does not exist");
+    }
+    auto it = warehouses_.find(warehouse->getId());
+    if(it != warehouses_.end()){
+        throw std::logic_error("This Warehouse already added");
+    }
+    warehouses_.emplace(warehouse->getId(), warehouse);
+}
+
+std::shared_ptr<Product> ShopFacade::getProductById(int id){
+    return warehouse_->findById(id);
 }

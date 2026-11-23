@@ -3,6 +3,7 @@
 #include<memory>
 #include<string>
 #include<vector>
+#include<unordered_map>
 
 class Warehouse;
 class ShopMediator;
@@ -19,6 +20,8 @@ class ShopFacade{
     std::shared_ptr<CommandHistory> history_;
     std::shared_ptr<Handler> inputHandler_;
 
+    std::unordered_map<int, std::shared_ptr<Warehouse>> warehouses_;
+
     public:
     ~ShopFacade() = default;
     ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<ShopMediator> mediator,
@@ -26,7 +29,7 @@ class ShopFacade{
     void addProduct(const std::string& type, const std::string& name, int price, double weight, int quantity);
     void changePrice(int productId, int newPrice);
     void changeQuantity(int productId, int amount);
-    void moveProduct(int productId, std::shared_ptr<Warehouse> targetWarehouse);
+    void moveProduct(int productId, int targetWarehouseId);
     void removeProduct(int productId);
     void listProducts();
 
@@ -40,4 +43,8 @@ class ShopFacade{
 
     void executeCommand(std::shared_ptr<Command> command);
     void processInput(const std::string& input);
+
+    void addWarehouse(std::shared_ptr<Warehouse> warehouse);
+    
+    std::shared_ptr<Product> getProductById(int id);
 };

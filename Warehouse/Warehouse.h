@@ -7,10 +7,14 @@
 
 class Warehouse{
     private:
+    static int nextId_;
+    int id_;
     std::unordered_map<int, std::shared_ptr<Product>> products_;
-
+    
     public:
     ~Warehouse() = default;
+    Warehouse();
+    int getId() const;
     void addProduct(std::shared_ptr<Product> product);
     void removeProduct(int id);
     std::shared_ptr<Product> findById(int id);

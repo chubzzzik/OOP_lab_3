@@ -15,9 +15,10 @@ AddProductHandler::AddProductHandler(std::shared_ptr<ShopFacade> facade):facade_
 
 bool AddProductHandler::handle(const std::string& input){
     std::istringstream iss (input);
-    std::string command;
-    iss >> command;
-    if(command != "addproduct"){
+    std::string action;
+    std::string subject;
+    iss >> action >> subject;
+    if(action != "add" || subject != "product"){
         if(next_ != nullptr){
             return next_->handle(input);
         }
