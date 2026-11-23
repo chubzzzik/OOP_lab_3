@@ -29,6 +29,7 @@ class ShopMediator{
     void shipOrder(int id);
     void cancelOrder(int id);
     void getStatistics() const;
+    void listOrders();
 
     void onProductAdded(int id);
     void onProductChanged(int id);

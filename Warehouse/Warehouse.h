@@ -17,4 +17,5 @@ class Warehouse{
     void changePrice(int id, int newPrice);
     void changeQuantity(int id, int delta);
     void moveProduct(int id, Warehouse& other);
+    void listProducts();
 };

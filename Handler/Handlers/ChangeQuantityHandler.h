@@ -1,10 +1,17 @@
 #pragma once
 
-#include "Handler.h"
+#include"Handler.h"
 
-#include <string>
+#include<string>
+#include<memory>
 
-class ChangeQuantityHandler : public Handler {
-public:
+class ShopFacade;
+
+class ChangeQuantityHandler:public Handler {
+    private:
+    std::shared_ptr<ShopFacade> facade_;
+
+    public:
+    ChangeQuantityHandler(std::shared_ptr<ShopFacade> facade);
     bool handle(const std::string& input) override;
 };

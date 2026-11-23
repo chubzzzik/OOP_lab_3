@@ -101,3 +101,7 @@ void ShopMediator::onProductRemoved(int id){
     }
     std::cout <<"Product removed: <id: " << id << ">\n";
 }
+
+void ShopMediator::listOrders(){
+    orderManager_->listOrders();
+}

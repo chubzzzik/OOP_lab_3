@@ -5,6 +5,7 @@
 #include<memory>
 #include<unordered_map>
 #include<stdexcept>
+#include<iostream>
 
 void Warehouse::addProduct(std::shared_ptr<Product> product){
     if(product == nullptr){
@@ -59,4 +60,13 @@ void Warehouse::moveProduct(int id, Warehouse& other){
     }
     other.addProduct(it->second);
     products_.erase(it);
+}
+
+void Warehouse::listProducts(){
+    for(auto& t : products_){
+        std::cout << "Id: " <<t.second->getId() << " Категория: " << t.second->getCategory()
+        << " Имя: " << t.second->getName() << " Цена: " << t.second->getPrice().getValue()
+        << " Вес: " << t.second->getWeight().getValue() << " Кол-во: " << t.second->getQuantity().getValue()
+        << "\n";
+    }
 }

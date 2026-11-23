@@ -127,3 +127,12 @@ bool OrderManager::isProductReserved(int productId) const{
     }
     return false;
 }
+
+void OrderManager::listOrders(){
+    for(auto& t: orders_){
+        std::cout << "Id: " <<t.second->getId() << " Клиент: " << t.second->getCustomer()
+        << " Статус: " << statusToString(t.second->getStatus()) << " Тип доставки: "
+        << t.second->getDelivery()->getType() << " Регион доставки: " << t.second->getRegion()
+        << " Общая стоимость: " << t.second->getTotalPrice() << "\n";
+    }
+}

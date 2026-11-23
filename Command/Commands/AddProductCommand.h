@@ -10,10 +10,11 @@ class AddProductCommand:public Command{
     std::string type_;
     std::string name_;
     int price_;
+    double weight_;
     int quantity_;
 
     public:
     AddProductCommand(std::shared_ptr<ShopFacade> facade, const std::string& type,
-        const std::string& name, int price, int quantity);
+        const std::string& name, int price, double weight, int quantity);
     void execute() override;
 };
