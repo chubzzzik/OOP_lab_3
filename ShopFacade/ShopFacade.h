@@ -25,7 +25,7 @@ class ShopFacade{
     public:
     ~ShopFacade() = default;
     ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<ShopMediator> mediator,
-        std::shared_ptr<CommandHistory> history, std::shared_ptr<Handler> inputHandler);
+        std::shared_ptr<CommandHistory> history);
     void addProduct(const std::string& type, const std::string& name, int price, double weight, int quantity);
     void changePrice(int productId, int newPrice);
     void changeQuantity(int productId, int amount);
@@ -47,4 +47,6 @@ class ShopFacade{
     void addWarehouse(std::shared_ptr<Warehouse> warehouse);
     
     std::shared_ptr<Product> getProductById(int id);
+
+    void setInputHandler(std::shared_ptr<Handler> handler);
 };

@@ -13,8 +13,8 @@
 #include<algorithm>
 
 ShopFacade::ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<ShopMediator> mediator,
-        std::shared_ptr<CommandHistory> history, std::shared_ptr<Handler> inputHandler):
-        warehouse_(warehouse), mediator_(mediator), history_(history), inputHandler_(inputHandler){
+        std::shared_ptr<CommandHistory> history):
+        warehouse_(warehouse), mediator_(mediator), history_(history){
             if(warehouse == nullptr){
                 throw std::invalid_argument("This Warehouse does not exist");
             }
@@ -23,9 +23,6 @@ ShopFacade::ShopFacade(std::shared_ptr<Warehouse> warehouse, std::shared_ptr<Sho
             }
             if(history == nullptr){
                 throw std::invalid_argument("This Command history does not exist");
-            }
-            if(inputHandler == nullptr){
-                throw std::invalid_argument("This Handler does not exist");
             }
 
             warehouses_.emplace(warehouse->getId(), warehouse);
@@ -101,6 +98,9 @@ void ShopFacade::executeCommand(std::shared_ptr<Command> command){
 }
 
 void ShopFacade::processInput(const std::string& input){
+    if(inputHandler_ == nullptr){
+        throw std::logic_error("Handler is not picked yet");
+    }
     inputHandler_->handle(input);
 }
 
@@ -117,4 +117,11 @@ void ShopFacade::addWarehouse(std::shared_ptr<Warehouse> warehouse){
 
 std::shared_ptr<Product> ShopFacade::getProductById(int id){
     return warehouse_->findById(id);
+}
+
+void ShopFacade::setInputHandler(std::shared_ptr<Handler> handler){
+    if(handler == nullptr){
+        throw std::invalid_argument("This Handler doe not exist");
+    }
+    inputHandler_ = handler;
 }

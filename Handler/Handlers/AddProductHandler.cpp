@@ -2,6 +2,7 @@
 #include"AddProductCommand.h"
 #include"ShopFacade.h"
 
+#include<iomanip>
 #include<memory>
 #include<stdexcept>
 #include<string>
@@ -14,7 +15,7 @@ AddProductHandler::AddProductHandler(std::shared_ptr<ShopFacade> facade):facade_
 }
 
 bool AddProductHandler::handle(const std::string& input){
-    std::istringstream iss (input);
+    std::istringstream iss(input);
     std::string action;
     std::string subject;
     iss >> action >> subject;
@@ -24,16 +25,19 @@ bool AddProductHandler::handle(const std::string& input){
         }
         return false;
     }
+
     std::string type;
     std::string name;
     int price;
     double weight;
     int quantity;
-
-    if(!(iss >> type >> name >> price >> weight >> quantity)){
-        throw std::invalid_argument("Wrong command arguments format"); 
+    if(!(iss >> type >> std::quoted(name) >> price >> weight >> quantity)){
+        throw std::invalid_argument("Wrong command arguments format");
     }
-    auto cmd = std::make_shared<AddProductCommand>(facade_, type, name, price, weight, quantity);
+
+    auto cmd = std::make_shared<AddProductCommand>(
+        facade_, type, name, price, weight, quantity
+    );
     facade_->executeCommand(cmd);
     return true;
 }

@@ -4,8 +4,9 @@
 #include"CourierDelivery.h"
 #include"PostDelivery.h"
 #include"PickupDelivery.h"
-#include<DeliveryProxy.h>
+#include"DeliveryProxy.h"
 
+#include<iomanip>
 #include<memory>
 #include<stdexcept>
 #include<string>
@@ -19,8 +20,7 @@ CreateOrderHandler::CreateOrderHandler(std::shared_ptr<ShopFacade> facade):facad
 }
 
 bool CreateOrderHandler::handle(const std::string& input){
-    std::vector<std::shared_ptr<Product>> items;
-    std::istringstream iss (input);
+    std::istringstream iss(input);
     std::string action;
     std::string subject;
     iss >> action >> subject;
@@ -30,28 +30,43 @@ bool CreateOrderHandler::handle(const std::string& input){
         }
         return false;
     }
+
     std::string customer;
+    std::string productIdsInput;
     std::string deliveryType;
-    std::string region;
-    if(!(iss >> customer >> deliveryType >> region)){
-        throw std::invalid_argument("Wrong command arguments format"); 
+    if(!(iss >> std::quoted(customer) >> productIdsInput >> deliveryType)){
+        throw std::invalid_argument("Wrong command arguments format");
     }
 
     std::vector<int> productIds;
-    int id;
-    while(iss >> id){
-        productIds.push_back(id);
+    std::istringstream idsStream(productIdsInput);
+    std::string idToken;
+    while(std::getline(idsStream, idToken, ',')){
+        if(idToken.empty()){
+            throw std::invalid_argument("Wrong product ids format");
+        }
+        try{
+            std::size_t parsedCharacters = 0;
+            int id = std::stoi(idToken, &parsedCharacters);
+            if(parsedCharacters != idToken.size()){
+                throw std::invalid_argument("Wrong product ids format");
+            }
+            productIds.push_back(id);
+        }
+        catch(const std::exception&){
+            throw std::invalid_argument("Wrong product ids format");
+        }
+    }
+    if(productIds.empty()){
+        throw std::invalid_argument("There are no product ids");
     }
 
-    if(productIds.size() == 0){
-        throw std::logic_error("There are no any id");
+    std::vector<std::shared_ptr<Product>> items;
+    for(int id : productIds){
+        items.push_back(facade_->getProductById(id));
     }
-    for(auto& t : productIds){
-        items.push_back(facade_->getProductById(t));
-    }
-    
+
     std::shared_ptr<Delivery> delivery;
-    
     if(deliveryType == "courier"){
         delivery = std::make_shared<CourierDelivery>();
     }
@@ -65,9 +80,11 @@ bool CreateOrderHandler::handle(const std::string& input){
         throw std::invalid_argument("Unknown delivery type");
     }
 
-    auto deliveryProxy = std::make_shared<DeliveryProxy>(delivery,region);
-
-    auto cmd = std::make_shared<CreateOrderCommand>(facade_, customer, items, deliveryProxy, region);
+    const std::string region = "RU";
+    auto deliveryProxy = std::make_shared<DeliveryProxy>(delivery, region);
+    auto cmd = std::make_shared<CreateOrderCommand>(
+        facade_, customer, items, deliveryProxy, region
+    );
     facade_->executeCommand(cmd);
     return true;
 }

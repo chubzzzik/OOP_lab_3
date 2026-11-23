@@ -17,13 +17,13 @@ bool HelpHandler::handle(const std::string& input){
     }
 
     std::cout << "Доступные команды:\n"
-        << "add product <type> <name> <price> <weight> <quantity>\n"
+        << "add product <type> \"<name>\" <price> <weight> <quantity>\n"
         << "change price <id> <newPrice>\n"
         << "change quantity <id> <amount>\n"
         << "remove product <id>\n"
         << "move product <id> to <warehouseId>\n"
         << "show products\n"
-        << "create order <customer> <deliveryType> <region> <productIds...>\n"
+        << "create order \"<customer>\" <productIds> <deliveryType>\n"
         << "cancel order <id>\n"
         << "confirm payment <id>\n"
         << "ship order <id>\n"
